@@ -2,6 +2,7 @@ from preprocess import get_datasets
 from models.basic_model import BasicModel
 from models.vgg_model import VGGModel
 from models.merged_model import MergedModel
+from models.dropout_model import DropoutModel
 from config import image_size, categories
 import matplotlib.pyplot as plt
 import time
@@ -11,6 +12,7 @@ categories_count = 3
 
 models = {
     'basic_model': BasicModel,
+    'dropout_model': DropoutModel,
     #'vgg_model': VGGModel,
     #'merged_model': MergedModel,
 }
@@ -46,7 +48,7 @@ if __name__ == "__main__":
     for name, model_class in models.items():
         print('* Training {} for {} epochs'.format(name, epochs))
         model = model_class(input_shape, categories_count)
-        model.train_model(train_dataset, validation_dataset, epochs)
+        history = model.train_model(train_dataset, validation_dataset, epochs)
         print('* Evaluating {}'.format(name))
         model.evaluate(test_dataset)
         print('* Confusion Matrix for {}'.format(name))
@@ -54,3 +56,5 @@ if __name__ == "__main__":
         filename = '{}_{}_epochs_timestamp_{}.keras'.format(name, epochs, int(time.time()))
         model.save_model(filename)
         print('* Model saved as {}'.format(filename))
+        model.print_summary()
+        plot_history(history)

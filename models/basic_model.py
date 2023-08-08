@@ -14,11 +14,9 @@ class BasicModel(Model):
 
         network.add(layers.Conv2D(64, (3,3), activation='relu', input_shape=input_shape))
         network.add(layers.MaxPooling2D((2,2)))
-        network.add(layers.Dropout(0.15))
 
         network.add(layers.Conv2D(128, (3,3), activation='relu', input_shape=input_shape))
         network.add(layers.MaxPooling2D((2,2)))
-        network.add(layers.Dropout(0.35))
 
         network.add(layers.Flatten())
 
