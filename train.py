@@ -11,7 +11,7 @@ input_shape = (image_size[0], image_size[1], 3)
 categories_count = 3
 
 models = {
-    'basic_model': BasicModel,
+    # 'basic_model': BasicModel,
     'dropout_model': DropoutModel,
     #'vgg_model': VGGModel,
     #'merged_model': MergedModel,
