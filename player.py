@@ -1,4 +1,10 @@
-from config import BOARD_SIZE, categories, image_size
+from config import BOARD_SIZE, categories, image_size, input_shape
+from keras.models import load_model
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
+import tensorflow as tf
+
 
 class TicTacToePlayer:
     def get_move(self, board_state):
@@ -27,11 +33,12 @@ class RandomPlayer:
 
 class UserWebcamPlayer:
     def _process_frame(self, frame):
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        width, height = frame.shape
-        size = min(width, height)
-        pad = int((width-size)/2), int((height-size)/2)
-        frame = frame[pad[0]:pad[0]+size, pad[1]:pad[1]+size]
+        # import cv2
+        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # width, height = frame.shape
+        # size = min(width, height)
+        # pad = int((width-size)/2), int((height-size)/2)
+        # frame = frame[pad[0]:pad[0]+size, pad[1]:pad[1]+size]
         return frame
 
     def _access_webcam(self):
@@ -87,6 +94,8 @@ class UserWebcamPlayer:
             raise e
     
     def _get_emotion(self, img):
+        
+        model_name = 'dropout_model_15_epochs_timestamp_1691611994.keras'
         # Your code goes here
         #
         # img an np array of size NxN (square), each pixel is a value between 0 to 255
@@ -98,7 +107,20 @@ class UserWebcamPlayer:
         #
         # You have to use your saved model, use resized img as input, and get one classification value out of it
         # The classification value should be 0, 1, or 2 for neutral, happy or surprise respectively
-        return 0
+
+        img = cv2.resize(img, image_size)
+        img = tf.expand_dims(img, 0)
+
+        if not hasattr(self, 'model'):
+            model = load_model(model_name)
+
+        prediction = model.predict(img)
+
+        curr_index = 0
+        for index in range(len(prediction)):
+            if prediction[index] > prediction[curr_index]:
+                curr_index = index
+        return curr_index
     
     def get_move(self, board_state):
         row, col = None, None
