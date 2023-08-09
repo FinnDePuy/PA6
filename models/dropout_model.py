@@ -19,16 +19,16 @@ class DropoutModel(Model):
 
         network.add(layers.Conv2D(128, (3,3), activation='relu', input_shape=input_shape))
         network.add(layers.MaxPooling2D((2,2)))
-        network.add(layers.SpatialDropout2D(0.2,input_shape=input_shape))
+        # network.add(layers.SpatialDropout2D(0.2,input_shape=input_shape))
 
 
         network.add(layers.Flatten())
 
-        #network.add(layers.SpatialDropout2D(0.05, input_shape=input_shape))
+        network.add(layers.Dropout(0.1, input_shape=input_shape))
 
         network.add(layers.Dense(128, activation='relu'))
 
-        network.add(layers.Dropout(0.2, input_shape=input_shape))
+        network.add(layers.Dropout(0.1, input_shape=input_shape))
         
         network.add(layers.Dense(categories_count, activation='softmax'))
 
@@ -42,6 +42,6 @@ class DropoutModel(Model):
         # self.model.compile(<configuration properties>)
         self.model.compile(
             optimizer=Adam(learning_rate=0.001),
-            loss='binary_crossentropy',
+            loss='categorical_crossentropy',
             metrics=['accuracy'],
         )
